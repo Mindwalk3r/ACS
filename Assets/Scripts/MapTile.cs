@@ -28,4 +28,11 @@ public class MapTile {
 		else 
 			tileColor = Color.white;
 	}
+
+	public void resetTile() {
+		this.traversed = false;
+		this.numOfPlacedPhermone = 0;
+		this.PheromoneCount = 0f;
+		this.lastVisited = 0f;
+	}
 }
