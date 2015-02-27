@@ -28,10 +28,10 @@ public class Directions
         indexes[6] = ypos-1;
         indexes[7] = ypos;
 		possibleDirections = new MapTile[4];
-		possibleDirections[0] = MazeCreation.tiles[xpos, ypos + 1];//Element 0 means the upper element
+		possibleDirections[0] = MazeCreation.tiles[xpos, ypos + 1]; //Element 0 means the upper element
 		possibleDirections[1] = MazeCreation.tiles[xpos + 1, ypos]; //Right
-		possibleDirections[2] = MazeCreation.tiles[xpos, ypos - 1];//down
-		possibleDirections[3] = MazeCreation.tiles[xpos - 1, ypos];//left
+		possibleDirections[2] = MazeCreation.tiles[xpos, ypos - 1]; //down
+		possibleDirections[3] = MazeCreation.tiles[xpos - 1, ypos]; //left
 		allowedDirections = new bool[4];
 		for (int i = 0; i < 4; i++)
 		{
@@ -42,29 +42,19 @@ public class Directions
 			else
 			{
                 allowedDirections[i] = searchDirection(indexes[i], indexes[i+4]);
-                
-
 			}
 		}
-        /*Debug.Log("Up direction: " + allowedDirections[0].ToString());
-        Debug.Log("Right direction: " + allowedDirections[1].ToString());
-                Debug.Log("Down direction: " + allowedDirections[2].ToString());
-                Debug.Log("Left direction: " + allowedDirections[3].ToString());
-        Debug.Break();*/
-		
 	}
 	
 	public float[] CalcDirection()
-	{
-        
+	{       
 		for (int i = 0; i < 4; i++)
-		{
-            
+		{    
 			if (allowedDirections[i] == true)
 			{
 				float lowerDivision = 0.0f;
 				float upperDivison = Mathf.Pow(1 + possibleDirections[i].PheromoneCount, powerFactorAlfa) * Mathf.Pow(1, powerFactorBeta);
-				//Debug.Log(upperDivison.ToString());
+
 				for (int j = 0; j < 4; j++)
 				{
 					if (allowedDirections[j] == true)
@@ -77,6 +67,7 @@ public class Directions
 		}
 		return pDirection;
 	}
+
     public bool searchDirection(int xpos, int ypos)
     {
         for (int i = 0; i < prevVisited.Count - 1; i++)

@@ -8,12 +8,11 @@ public class PosPoint
     public int Y { get; set; }
     public PosPoint(int x, int y)
     {
-        this.X = x;
+    	this.X = x;
         this.Y = y;
     }
-
-    
 }
+
 public class Ant
 {
 	public int posX;

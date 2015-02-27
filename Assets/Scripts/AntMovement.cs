@@ -37,11 +37,8 @@ public class AntMovement : MonoBehaviour
 
 			Vector3 pos = ants[i].obj.transform.position;
 			Vector3 originalPos = ants[i].obj.transform.position;
-
-			var directionR = Random.Range (0.0f, 3.9f);
             var directionP = Random.Range(0.00f, 100.00f);
-			int dir = (int)directionR;
-            int amountAllowed;
+
             float probabilitySum;
             float[] probabilityDirection; //0 = up, 1 = right, 2 = down, 3 = left
             
@@ -50,12 +47,6 @@ public class AntMovement : MonoBehaviour
             d1 = new Directions((int)pos.x, (int)pos.y, ants[i].recordMap);
             
             probabilityDirection = d1.CalcDirection();
-            //Debug.Log(probabilityDirection[0].ToString());
-            //Debug.Log(probabilityDirection[1].ToString());
-            //Debug.Log(probabilityDirection[2].ToString());
-            //Debug.Log(probabilityDirection[3].ToString());
-            
-            
 
             //Probability movement
             probabilitySum = probabilityDirection[0] + probabilityDirection[1] + probabilityDirection[2] + probabilityDirection[3];
@@ -78,8 +69,7 @@ public class AntMovement : MonoBehaviour
                 else
                 {
                     pos.x -= 1;
-                }
-                
+                }          
             }
 			else {
 				reset = true;
@@ -92,23 +82,17 @@ public class AntMovement : MonoBehaviour
 	            p1 = new PosPoint(ants[i].posX, ants[i].posY);
 				ants[i].recordMap.Add(p1);
 			} else {
-				//ants[i].disableAnt();
+				//No valid path found, reset ant
 				ants[i].resetAnt();
-				//numAntsAlive--;
 			}
 
-
 			tiles[(int)pos.x, (int)pos.y].lastVisited = Time.time;
-
-
 			if (tiles[(int)pos.x, (int)pos.y].isGoal) {
 				ants[i].disableAnt();
 				this.updatePhermone(i);
 				ants[i].resetAnt();
 				numAntsAlive--;
 			}
-
-
 		}
 		if (numAntsAlive == 0) {
 			this.activateAllAnts();	
@@ -117,29 +101,25 @@ public class AntMovement : MonoBehaviour
 	}
 
 	private void updatePhermone(int i) {
-		//for (int i = 0; i < numAnts; i++) {
-			foreach (PosPoint point in ants[i].recordMap) {
-				tiles [point.X, point.Y].numOfPlacedPhermone++;
-				tiles [point.X, point.Y].traversed = true;
+		foreach (PosPoint point in ants[i].recordMap) {
+			tiles [point.X, point.Y].numOfPlacedPhermone++;
+			tiles [point.X, point.Y].traversed = true;
+		}
+		
+		foreach (MapTile tile in tiles) {
+			if (tile.traversed) {
+				tile.PheromoneCount = (1 - p) * tile.PheromoneCount + tile.numOfPlacedPhermone * c;
+				tile.traversed = false;
+			} else {
+				tile.PheromoneCount = (1 - p) * tile.PheromoneCount;
+				if (tile.numOfPlacedPhermone != 0)
+					tile.numOfPlacedPhermone--;
 			}
 			
-			foreach (MapTile tile in tiles) {
-				if (tile.traversed) {
-					tile.PheromoneCount = (1 - p) * tile.PheromoneCount + tile.numOfPlacedPhermone * c;
-					tile.traversed = false;
-				} else {
-					tile.PheromoneCount = (1 - p) * tile.PheromoneCount;
-					if (tile.numOfPlacedPhermone != 0)
-						tile.numOfPlacedPhermone--;
-				}
-				
-				newColor = new Color (1f - (0.01f * tile.PheromoneCount), 1f, 1f - (0.01f * tile.PheromoneCount), 1);
-				if (!tile.isStart && !tile.isGoal && !tile.Blocked)
-					tile.obj.GetComponent<SpriteRenderer> ().color = newColor;
-			}
-
-
-		//}
+			newColor = new Color (1f - (0.01f * tile.PheromoneCount), 1f, 1f - (0.01f * tile.PheromoneCount), 1);
+			if (!tile.isStart && !tile.isGoal && !tile.Blocked)
+				tile.obj.GetComponent<SpriteRenderer> ().color = newColor;
+		}
 	}
 	                           
 	private void activateAllAnts() {

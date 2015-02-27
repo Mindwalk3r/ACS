@@ -18,7 +18,7 @@ public class MapTile {
 		this.Blocked = blocked;
 		isStart = start;
 		isGoal = goal;
-		
+
 		if (blocked)
 			tileColor = Color.gray;
 		else if (start)

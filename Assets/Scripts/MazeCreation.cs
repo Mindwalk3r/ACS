@@ -37,15 +37,5 @@ public class MazeCreation : MonoBehaviour
 			}
 		}
 	}
-
-	public void FixedUpdate() {
-		//Set tile color
-		for (int i = 0; i < mapSize; i++) {
-			for (int j = 0; j < mapSize; j++) {
-				//if (!tiles[i,j].Blocked && !tiles[i,j].isGoal && !tiles[i,j].isStart && tiles[i,j].lastVisited + 1 <= Time.time)
-					//tiles[i, j].obj.GetComponent<SpriteRenderer>().color = Color.white;
-			}
-		}
-	}
 }
   
