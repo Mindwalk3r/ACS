@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MazeCreation : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class MazeCreation : MonoBehaviour
 	public static int mapSize = 20;
 	private float offset = 1f;
 	public static MapTile[,] tiles = new MapTile[mapSize, mapSize];
-
+	public static List<PosPoint> BestGlobalTour;
+	public static int BestTour;
     public void Start()
     {
 		int rand;
+		BestTour = 0;
+		BestGlobalTour = new List<PosPoint> ();
 		int startX = 1;
 		int startY = mapSize - 2;
 		int goalX = mapSize - 2;
