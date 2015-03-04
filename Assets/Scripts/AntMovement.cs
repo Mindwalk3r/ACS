@@ -105,6 +105,9 @@ public class AntMovement : MonoBehaviour
 			tiles[point.X, point.Y].numOfPlacedPhermone++;
 			tiles[point.X, point.Y].traversed = true;
 			tiles[point.X, point.Y].lastTraversed = Time.time;
+=======
+			tiles [point.X, point.Y].numOfPlacedPhermone++;
+			tiles [point.X, point.Y].traversed = true;
 		}
 		
 		foreach (MapTile tile in tiles) {
