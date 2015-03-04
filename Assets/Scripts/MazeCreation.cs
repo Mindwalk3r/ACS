@@ -40,6 +40,20 @@ public class MazeCreation : MonoBehaviour
 		pressedTile = (GameObject)Instantiate(tile, new Vector3(0, 0, 10), Quaternion.identity);
 	}
 
+	public void FixedUpdate() {
+		Color newColor;
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				if (!tiles[i, j].Blocked && !tiles[i, j].isGoal && !tiles[i, j].isStart && tiles[i, j].lastTraversed != 0 && tiles[i, j].lastTraversed + 4 < Time.time) {
+					tiles[i,j].PheromoneCount = (1f - 0.005f) * tiles[i,j].PheromoneCount;
+					if (tiles[i,j].numOfPlacedPhermone != 0) tiles[i,j].numOfPlacedPhermone--;
+					newColor = new Color (1f - (0.01f * tiles[i, j].PheromoneCount), 1f, 1f - (0.01f * tiles[i, j].PheromoneCount), 1);
+					tiles[i, j].obj.GetComponent<SpriteRenderer> ().color = newColor;
+				}
+			}
+		}
+	}
+
 	public void Update() {
 		if (Input.GetMouseButtonDown(0)) {
 			Vector3 tilePos = pressedTile.transform.position;

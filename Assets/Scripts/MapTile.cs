@@ -4,7 +4,7 @@ using System.Collections;
 public class MapTile {	
 	public GameObject obj;
 	public Color tileColor;
-	public float lastVisited;
+	public float lastTraversed;
 	public int numOfPlacedPhermone;
 	public float PheromoneCount { get; set; }
 	public bool Blocked { get; set; }
@@ -33,6 +33,6 @@ public class MapTile {
 		this.traversed = false;
 		this.numOfPlacedPhermone = 0;
 		this.PheromoneCount = 0f;
-		this.lastVisited = 0f;
+		this.lastTraversed = 0f;
 	}
 }

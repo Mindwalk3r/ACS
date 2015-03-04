@@ -11,6 +11,7 @@ public class AntMovement : MonoBehaviour
 
 	private float p = 0.6f;
 	private float c = 1f;
+	private float maxPhermone = 150f;
 
 	private int numAntsAlive;
 	private int numAnts = 50;
@@ -86,7 +87,6 @@ public class AntMovement : MonoBehaviour
 				ants[i].resetAnt();
 			}
 
-			tiles[(int)pos.x, (int)pos.y].lastVisited = Time.time;
 			if (tiles[(int)pos.x, (int)pos.y].isGoal) {
 				ants[i].disableAnt();
 				this.updatePhermone(i);
@@ -102,12 +102,13 @@ public class AntMovement : MonoBehaviour
 
 	private void updatePhermone(int i) {
 		foreach (PosPoint point in ants[i].recordMap) {
-			tiles [point.X, point.Y].numOfPlacedPhermone++;
-			tiles [point.X, point.Y].traversed = true;
+			tiles[point.X, point.Y].numOfPlacedPhermone++;
+			tiles[point.X, point.Y].traversed = true;
+			tiles[point.X, point.Y].lastTraversed = Time.time;
 		}
 		
 		foreach (MapTile tile in tiles) {
-			if (tile.traversed) {
+			if (tile.traversed && tile.PheromoneCount < maxPhermone) {
 				tile.PheromoneCount = (1 - p) * tile.PheromoneCount + tile.numOfPlacedPhermone * c;
 				tile.traversed = false;
 			} else {
