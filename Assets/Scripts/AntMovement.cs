@@ -76,6 +76,7 @@ public class AntMovement : MonoBehaviour
 				reset = true;
 			}
 
+
 			if (!reset) {
 				ants[i].obj.transform.position = pos;
 				ants[i].posX = (int)pos.x; //Might not be needed
@@ -105,9 +106,61 @@ public class AntMovement : MonoBehaviour
 			tiles[point.X, point.Y].numOfPlacedPhermone++;
 			tiles[point.X, point.Y].traversed = true;
 			tiles[point.X, point.Y].lastTraversed = Time.time;
-=======
-			tiles [point.X, point.Y].numOfPlacedPhermone++;
-			tiles [point.X, point.Y].traversed = true;
+
+
+			//------------------------------------------------------------------- Implementation for elitist ant colony
+
+			List<PosPoint> lastGlobalTour = new List<PosPoint>();
+			if (MazeCreation.BestGlobalTour.Count == 0)
+			{
+				foreach (PosPoint temp in ants[i].recordMap) 
+				{
+					MazeCreation.BestGlobalTour.Add (temp);
+				}
+				foreach (PosPoint position in MazeCreation.BestGlobalTour)
+				{
+					tiles[position.X, position.Y].PheromoneCount = (1 - p) * tiles[position.X, position.Y].PheromoneCount + tiles[position.X, position.Y].numOfPlacedPhermone + (100 - MazeCreation.BestGlobalTour.Count) * c;
+					//tiles[position.X, position.Y].obj.GetComponent<SpriteRenderer>().color = Color.red;
+				}
+				Debug.Log("New starting tour found");
+				Debug.Log("TileCount: " + MazeCreation.BestGlobalTour.Count);
+			}
+			else if (MazeCreation.BestGlobalTour.Count > ants[i].recordMap.Count)
+			{
+				Debug.Log ("GlobalTourCount: " + MazeCreation.BestGlobalTour.Count.ToString () + "RecordMapCount: " + ants [i].recordMap.Count.ToString ());
+
+				lastGlobalTour = MazeCreation.BestGlobalTour;
+
+				//Debug.Log("New tour found");
+				//Debug.Log("TileCount: " + MazeCreation.BestGlobalTour.Count + " RecordMapCount: " + ants[i].recordMap.Count);
+				MazeCreation.BestGlobalTour.Clear();
+				foreach (PosPoint temp in ants[i].recordMap) 
+				{
+					MazeCreation.BestGlobalTour.Add (temp);
+				}
+				//MazeCreation.BestGlobalTour = ants[i].recordMap;
+				Debug.Log ("GlobalTourCount: " + MazeCreation.BestGlobalTour.Count.ToString () + "RecordMapCount: " + ants [i].recordMap.Count.ToString ());
+				//Debug.Break ();
+				foreach (MapTile tile in tiles)
+				{
+					//tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+				}
+				foreach (PosPoint position in MazeCreation.BestGlobalTour)
+				{
+					tiles[position.X, position.Y].PheromoneCount = (1 - p) * tiles[position.X, position.Y].PheromoneCount + tiles[position.X, position.Y].numOfPlacedPhermone + (100 - MazeCreation.BestGlobalTour.Count) * c;
+					//tiles[position.X, position.Y].obj.GetComponent<SpriteRenderer>().color = Color.red;
+				}
+				Debug.Log ("GlobalTourCount: " + MazeCreation.BestGlobalTour.Count.ToString () + "RecordMapCount: " + ants [i].recordMap.Count.ToString ());
+				//Debug.Break ();
+			}
+			if (lastGlobalTour.Count != 0)
+			{
+				foreach (PosPoint position in lastGlobalTour)
+				{
+					tiles[position.X, position.Y].PheromoneCount = (1 - p) * tiles[position.X, position.Y].PheromoneCount;
+				}
+			}
+			//---------------------------------------------------------------------- End implementation of elitist any colony
 		}
 		
 		foreach (MapTile tile in tiles) {
